@@ -34,13 +34,14 @@ namespace VlcTimer
             _timer = new System.Timers.Timer
             {
                 Interval = 10d,
-                Enabled = true,
-                AutoReset = true
+                Enabled = false,
+                AutoReset = true,
             };
             
             _timer.Elapsed += (_, args) =>
             {
-                VideoTimer.Elapsed = (args.SignalTime - _timerStart).ToString("mm:ss.fff");
+                Debug.WriteLine("Elapsed");
+                VideoTimer.Elapsed = (args.SignalTime - _timerStart).ToString(@"mm\:ss\.fff");
             };
         }
 
@@ -49,14 +50,16 @@ namespace VlcTimer
             Action handler = e.Key switch
             {
                 Key.Space => StartStopPlayback,
-                Key.Escape => () =>
-                {
-                    _timer.Stop();
-                    Close();
-                },
+                Key.Escape => Exit,
                 _ => () => { }
             };
             handler();
+        }
+
+        private void Exit()
+        {
+            _timer.Stop();
+            Close();
         }
 
         private bool _isPlaying;
